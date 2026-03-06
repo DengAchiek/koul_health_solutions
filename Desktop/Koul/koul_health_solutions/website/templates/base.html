@@ -1,0 +1,546 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description|default:"Preventive care, wellness screening, and natural supplement guidance in Nairobi." }}{% endblock %}" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #f4f8fb;
+      --surface: #ffffff;
+      --surface-2: #ecf4fb;
+      --text: #14324a;
+      --muted: #5a7288;
+      --line: #d3e0eb;
+      --primary: #0f766e;
+      --primary-2: #0ea5a0;
+      --accent: #f59e0b;
+      --radius: 18px;
+      --shadow: 0 16px 40px rgba(18, 52, 77, 0.12);
+      --shadow-soft: 0 8px 24px rgba(18, 52, 77, 0.08);
+      --danger: #be123c;
+      --success: #047857;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Sora", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 560px at -10% -5%, rgba(14, 165, 160, 0.18), transparent 66%),
+        radial-gradient(820px 480px at 110% -10%, rgba(245, 158, 11, 0.14), transparent 60%),
+        var(--bg);
+      line-height: 1.62;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container { width: min(1160px, 92%); margin: 0 auto; }
+
+    .utility {
+      background: #0b3d63;
+      color: #d8ecfa;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .utility-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+      font-size: 13px;
+    }
+
+    .utility-links,
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .utility-chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .header-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(90deg, #132238, #1f2d4f);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 10px 22px rgba(10, 18, 32, 0.28);
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: #f5f9ff;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(140deg, #f97316, #f59e0b);
+      box-shadow: 0 10px 24px rgba(245, 158, 11, 0.35);
+      position: relative;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+      border-radius: 8px;
+    }
+
+    .brand span { color: #fbbf24; }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: nowrap;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .nav-links a {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #d8e5ff;
+      white-space: nowrap;
+      padding: 7px 9px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .nav-actions {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+    }
+
+    .nav-actions .cta {
+      font-size: 12px;
+      padding: 9px 10px;
+      white-space: nowrap;
+      box-shadow: none;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+    }
+
+    .nav-actions .cta.secondary {
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.08);
+      color: #f4f8ff;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f5f9ff;
+      padding: 10px 12px;
+      font-weight: 700;
+    }
+
+    .cta {
+      border: 1px solid transparent;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 11px 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #f3fffe;
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.24);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      cursor: pointer;
+    }
+
+    .cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 30px rgba(15, 118, 110, 0.3);
+    }
+
+    .cta.secondary {
+      border-color: var(--line);
+      background: #ffffff;
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .cta.warning {
+      background: linear-gradient(135deg, #b45309, #f59e0b);
+    }
+
+    .page { padding: 32px 0 50px; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.15;
+      letter-spacing: -0.3px;
+    }
+
+    h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(30px, 4vw, 48px);
+    }
+
+    h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(24px, 3vw, 36px);
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .header p,
+    .help,
+    .muted { color: var(--muted); }
+
+    .badge,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 5px rgba(15, 118, 110, 0.18);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 22px;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(236, 244, 251, 0.94));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .price {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #ecfeff;
+      border: 1px solid #9adfdf;
+      color: #0f766e;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    form { display: grid; gap: 11px; }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #21445d;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #c8d9e8;
+      padding: 11px 12px;
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+    }
+
+    textarea { min-height: 110px; resize: vertical; }
+
+    .errors {
+      border: 1px solid #fecdd3;
+      background: #fff1f3;
+      color: var(--danger);
+      border-radius: 12px;
+      padding: 11px;
+      font-weight: 600;
+    }
+
+    .success {
+      border: 1px solid #a7f3d0;
+      background: #ecfdf5;
+      color: var(--success);
+      border-radius: 12px;
+      padding: 11px;
+      font-weight: 700;
+    }
+
+    .footer {
+      margin-top: 36px;
+      padding: 34px 0 42px;
+      background: #0b3d63;
+      color: #d7e9f7;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 18px;
+    }
+
+    .footer h3,
+    .footer h4 {
+      color: #ffffff;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 8px;
+    }
+
+    .footer-links a {
+      color: #d7e9f7;
+      font-size: 14px;
+    }
+
+    .footer-links a:hover { color: #ffffff; }
+
+    .footer .cta.secondary {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.24);
+      color: #ffffff;
+    }
+
+    @media (max-width: 1260px) {
+      .nav { grid-template-columns: auto auto 1fr auto; }
+      .menu-toggle { display: inline-flex; }
+
+      .nav-links,
+      .nav-actions {
+        display: none;
+      }
+
+      .header-wrap.open .nav-links,
+      .header-wrap.open .nav-actions {
+        display: flex;
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        background: rgba(19, 34, 56, 0.98);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 14px;
+        padding: 12px;
+      }
+
+      .header-wrap.open .nav-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        margin-top: 8px;
+        gap: 8px;
+      }
+
+      .header-wrap.open .nav-links a {
+        font-size: 13px;
+        color: #eef4ff;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+      }
+
+      .header-wrap.open .nav-actions {
+        margin-top: 8px;
+        width: 100%;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .header { align-items: flex-start; flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .utility-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="utility">
+    <div class="container utility-inner">
+      <div class="utility-links">
+        <span class="utility-chip">{{ site_settings.utility_location_label|default:"Nairobi Main Clinic" }}</span>
+        <span class="utility-chip">{{ site_settings.utility_hours|default:"Mon-Sat 8:00am - 6:00pm" }}</span>
+        <a class="utility-chip" href="{{ site_settings.phone_link|default:'tel:+254795225892' }}">Call: {{ site_settings.contact_phone|default:"+254 795 225 892" }}</a>
+      </div>
+      <div class="quick-actions">
+        <a class="utility-chip" href="{{ site_settings.whatsapp_link|default:'https://wa.me/254784768933' }}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="utility-chip" href="{% url 'patient_resources' %}">Patient Resources</a>
+        <a class="utility-chip" href="{% url 'order_request' %}">Order Support</a>
+      </div>
+    </div>
+  </div>
+
+  <header id="site-header" class="header-wrap">
+    <div class="container nav">
+      <a class="brand" href="{% url 'home' %}">
+        <div class="logo"></div>
+        <div>{{ site_settings.site_name|default:"Kuol Health Solutions" }}</div>
+      </a>
+
+      <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-links">Menu</button>
+
+      <nav id="site-links" class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'services' %}">Services</a>
+        <a href="{% url 'products' %}">Supplements</a>
+        <a href="{% url 'locations' %}">Locations</a>
+        <a href="{% url 'blog' %}">Health Education</a>
+        <a href="{% url 'testimonials' %}">Testimonials</a>
+        <a href="{% url 'contact' %}">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="cta secondary" href="{% url 'order_request' %}">Order</a>
+        <a class="cta" href="{% url 'book_screening' %}">Book Screening</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container page">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>{{ site_settings.site_name|default:"Kuol Health Solutions" }}</h3>
+        <p>
+          {{ site_settings.footer_summary|default:"Preventive healthcare support through screening, education, and natural supplement guidance. We help individuals take practical steps toward healthier living." }}
+        </p>
+        <div class="btn-row">
+          <a class="cta secondary" href="{% url 'book_screening' %}">Book Appointment</a>
+          <a class="cta secondary" href="{% url 'locations' %}">View Locations</a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-links">
+          <a href="{% url 'services' %}">Services</a>
+          <a href="{% url 'products' %}">Supplements</a>
+          <a href="{% url 'patient_resources' %}">Patient Resources</a>
+          <a href="{% url 'blog' %}">Health Education</a>
+          <a href="{% url 'order_request' %}">Order Support</a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Contact</h4>
+        <div class="footer-links">
+          <a href="https://maps.google.com/?q={{ site_settings.facility_address|default:'JKUAT Towers, Kenyatta Avenue, Nairobi'|urlencode }}" target="_blank" rel="noopener">{{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</a>
+          <a href="mailto:{{ site_settings.contact_email|default:'KuolHealthsolutions@gmail.com' }}">{{ site_settings.contact_email|default:"KuolHealthsolutions@gmail.com" }}</a>
+          <a href="{{ site_settings.phone_link|default:'tel:+254795225892' }}">{{ site_settings.contact_phone|default:"+254 795 225 892" }}</a>
+          <a href="{{ site_settings.whatsapp_link|default:'https://wa.me/254784768933' }}" target="_blank" rel="noopener">WhatsApp: {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</a>
+        </div>
+        <p style="margin-top: 12px; font-size: 13px; color: #c7ddec;">© {% now "Y" %} {{ site_settings.site_name|default:"Kuol Health Solutions" }}. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const header = document.getElementById("site-header");
+    const button = document.getElementById("menu-toggle");
+    if (header && button) {
+      button.addEventListener("click", function () {
+        const isOpen = header.classList.toggle("open");
+        button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    }
+  </script>
+</body>
+</html>

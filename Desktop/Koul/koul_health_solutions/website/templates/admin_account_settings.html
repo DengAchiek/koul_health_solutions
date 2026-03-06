@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Admin Account Settings | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Admin Account Settings</h1>
+      <p class="muted">Update your admin username, email, and password securely.</p>
+    </div>
+    <div class="badge"><span class="dot"></span> Staff only</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Profile</h3>
+
+      {% if profile_success %}
+        <div class="success">Profile updated successfully.</div>
+      {% endif %}
+
+      {% if profile_form.errors %}
+        <div class="errors">Please correct the profile form errors.</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="action" value="profile" />
+
+        <div>
+          <label for="{{ profile_form.username.id_for_label }}">Username</label>
+          {{ profile_form.username }}
+          {% for e in profile_form.username.errors %}<div class="help" style="color:#b91c1c;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ profile_form.email.id_for_label }}">Email</label>
+          {{ profile_form.email }}
+          {% for e in profile_form.email.errors %}<div class="help" style="color:#b91c1c;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <button class="cta" type="submit">Save Profile</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Password</h3>
+
+      {% if password_success %}
+        <div class="success">Password changed successfully.</div>
+      {% endif %}
+
+      {% if password_form.errors %}
+        <div class="errors">Please correct the password form errors.</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="action" value="password" />
+
+        <div>
+          <label for="{{ password_form.old_password.id_for_label }}">Current password</label>
+          {{ password_form.old_password }}
+          {% for e in password_form.old_password.errors %}<div class="help" style="color:#b91c1c;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ password_form.new_password1.id_for_label }}">New password</label>
+          {{ password_form.new_password1 }}
+          {% for e in password_form.new_password1.errors %}<div class="help" style="color:#b91c1c;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ password_form.new_password2.id_for_label }}">Confirm new password</label>
+          {{ password_form.new_password2 }}
+          {% for e in password_form.new_password2.errors %}<div class="help" style="color:#b91c1c;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <button class="cta" type="submit">Change Password</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

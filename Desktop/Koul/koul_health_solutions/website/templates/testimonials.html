@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Testimonials | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Testimonials</h1>
+      <p>
+        Real feedback from clients supported through preventive wellness guidance and natural supplement routines.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> Trusted support</div>
+  </div>
+
+  <div class="grid-3">
+    {% for t in testimonials %}
+      <div class="card">
+        <h3>{{ t.name }}</h3>
+        {% if t.role_or_title %}
+          <p style="margin-top:6px; color:var(--muted); font-weight:800;">{{ t.role_or_title }}</p>
+        {% endif %}
+
+        <p style="margin-top:10px;">“{{ t.quote }}”</p>
+
+        <div style="margin-top:12px; color: #ffe8a3; font-weight:900;">
+          Rating: {{ t.rating }}/5
+        </div>
+
+        <div class="btn-row">
+          <a class="cta secondary" href="{% url 'products' %}">Explore Supplements</a>
+          <a class="cta" href="{% url 'book_screening' %}">Book Screening</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="card">
+        <h3>No testimonials yet</h3>
+        <p>Add testimonials in the admin panel to build trust.</p>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

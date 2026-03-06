@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Supplements | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Supplements</h1>
+      <p>
+        Certified, patented, and natural supplements distributed in Kenya through our BFSUMA partnership.
+        Choose a product to view details and get guidance from a consultant.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> Certified • Natural</div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <form method="get" style="grid-template-columns: 1fr auto; align-items:end;">
+      <div>
+        <label for="q">Search products</label>
+        <input id="q" name="q" value="{{ request.GET.q }}" placeholder="e.g. immunity, energy, wellness" />
+        <div class="help">Tip: Use keywords to quickly find a supplement.</div>
+      </div>
+      <button class="cta" type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="grid-3">
+    {% for p in products %}
+      <div class="card">
+        <div class="product-top">
+          <h3 style="max-width: 18ch;">{{ p.name }}</h3>
+          {% if p.price_kes %}
+            <div class="price">KES {{ p.price_kes }}</div>
+          {% endif %}
+        </div>
+
+        <p>{{ p.short_description }}</p>
+
+        <div class="btn-row">
+          <a class="cta secondary" href="{% url 'product_detail' p.slug %}">View Details</a>
+          <a class="cta" href="{% url 'book_screening' %}?product={{ p.slug }}">Get Guidance</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="card">
+        <h3>No products found</h3>
+        <p>Try a different keyword, or contact us for recommendations.</p>
+        <div class="btn-row">
+          <a class="cta" href="{% url 'contact' %}">Contact Us</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

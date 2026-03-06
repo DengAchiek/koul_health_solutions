@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Order Supplements | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Order Supplements</h1>
+      <p>
+        Submit an order request and we’ll confirm availability, pricing, and delivery/pickup details.
+        You can also send the order instantly via WhatsApp.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> Fast WhatsApp support</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Order request form</h3>
+
+      {% if success %}
+        <div class="success">
+          Order request submitted successfully. We will contact you shortly to confirm the order and payment details.
+        </div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="errors">
+          Please correct the errors below and try again.
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div>
+          <label for="{{ form.full_name.id_for_label }}">Full name</label>
+          {{ form.full_name }}
+          {% for e in form.full_name.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label for="{{ form.phone.id_for_label }}">Phone number</label>
+            {{ form.phone }}
+            {% for e in form.phone.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label for="{{ form.email.id_for_label }}">Email (optional)</label>
+            {{ form.email }}
+          </div>
+        </div>
+
+        <div>
+          <label for="{{ form.product.id_for_label }}">Select supplement</label>
+          {{ form.product }}
+          {% for e in form.product.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+            {{ form.quantity }}
+          </div>
+          <div>
+            <label for="{{ form.delivery_option.id_for_label }}">Pickup or Delivery</label>
+            {{ form.delivery_option }}
+          </div>
+        </div>
+
+        <div>
+          <label for="{{ form.delivery_location.id_for_label }}">Delivery location (if delivery)</label>
+          {{ form.delivery_location }}
+          {% for e in form.delivery_location.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div>
+          <label for="{{ form.notes.id_for_label }}">Notes (optional)</label>
+          {{ form.notes }}
+        </div>
+
+        <button class="cta" type="submit">Submit Order Request</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Order via WhatsApp</h3>
+      <p>
+        If you prefer, you can send your order instantly on WhatsApp.
+        After submitting the form, a ready message will appear here.
+      </p>
+
+      {% if whatsapp_message %}
+        <div class="card" style="margin-top:14px;">
+          <h3>Copy / send message</h3>
+          <p class="help">Copy the text below and send it on WhatsApp, or click the button.</p>
+          <textarea readonly style="min-height:180px;">{{ whatsapp_message }}</textarea>
+
+          {# Use urlencode to pass message to WhatsApp #}
+          <div class="btn-row">
+            <a class="cta" target="_blank" rel="noopener"
+               href="https://wa.me/{{ wa_phone_digits|default:'254784768933' }}?text={{ whatsapp_message|urlencode }}">
+              Send on WhatsApp
+            </a>
+            <a class="cta secondary" href="{% url 'products' %}">Browse Supplements</a>
+          </div>
+        </div>
+      {% else %}
+        <div class="card" style="margin-top:14px;">
+          <h3>WhatsApp</h3>
+          <p>📱 {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
+          <div class="btn-row">
+            <a class="cta secondary" target="_blank" rel="noopener" href="{{ site_settings.whatsapp_link|default:'https://wa.me/254784768933' }}">Open WhatsApp Chat</a>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="card" style="margin-top:14px;">
+        <h3>Payment & confirmation</h3>
+        <p style="color:var(--muted);">
+          After we confirm your order, we’ll share payment instructions and delivery/pickup details.
+          For best guidance, you can also book a screening or consultation.
+        </p>
+        <div class="btn-row">
+          <a class="cta" href="{% url 'book_screening' %}">Book Screening</a>
+          <a class="cta secondary" href="{% url 'contact' %}">Contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

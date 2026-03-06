@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Contact | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Contact Us</h1>
+      <p>We are here to support your preventive health journey.</p>
+    </div>
+    <div class="badge"><span class="dot"></span> Fast response on WhatsApp</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Reach us</h3>
+      <p>📍 <b>Location:</b> {{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</p>
+      <p>📧 <b>Email:</b> {{ site_settings.contact_email|default:"KuolHealthsolutions@gmail.com" }}</p>
+      <p>📱 <b>WhatsApp:</b> {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
+      <p>📞 <b>Call:</b> {{ site_settings.contact_phone|default:"+254 795 225 892" }}</p>
+
+      <div class="btn-row">
+        <a class="cta" href="{{ site_settings.whatsapp_link|default:'https://wa.me/254784768933' }}" target="_blank" rel="noopener">Chat on WhatsApp</a>
+        <a class="cta secondary" href="{{ site_settings.phone_link|default:'tel:+254795225892' }}">Call Now</a>
+        <a class="cta secondary" href="mailto:{{ site_settings.contact_email|default:'KuolHealthsolutions@gmail.com' }}">Send Email</a>
+      </div>
+
+      <p class="help" style="margin-top:12px;">
+        You can also book a professional full body health screening at our Nairobi facility or speak to one of our consultants for personalized guidance.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Book a screening</h3>
+      <p>Use our booking form to reserve a session at the Nairobi facility.</p>
+      <div class="btn-row">
+        <a class="cta" href="{% url 'book_screening' %}">Book Screening</a>
+        <a class="cta secondary" href="{% url 'products' %}">Browse Supplements</a>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>Hours</h3>
+        <p style="color:var(--muted);">{{ site_settings.utility_hours|default:"Mon-Sat: 8:00am - 6:00pm" }}</p>
+        <p style="color:var(--muted);">Sunday: By appointment</p>
+      </div>
+
+      {% if locations %}
+        <div class="card" style="margin-top:14px;">
+          <h3>Active Locations</h3>
+          {% for item in locations %}
+            <p style="color:var(--muted);">{{ item.name }} - {{ item.address }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

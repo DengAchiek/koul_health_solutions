@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>{{ post.title }}</h1>
+      <p>{{ post.excerpt }}</p>
+    </div>
+    <div class="badge"><span class="dot"></span> Health Education</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Article</h3>
+      <p style="white-space:pre-line;">{{ post.content }}</p>
+
+      <div class="btn-row">
+        <a class="cta secondary" href="{% url 'blog' %}">Back to Articles</a>
+        <a class="cta" href="{% url 'book_screening' %}">Get Personalized Guidance</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Need help applying this?</h3>
+      <p>
+        Our facility offers professional full body health screening and consultations to guide you toward informed health decisions.
+      </p>
+      <div class="btn-row">
+        <a class="cta" href="{% url 'book_screening' %}">Book Screening</a>
+        <a class="cta secondary" href="{% url 'products' %}">Explore Supplements</a>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>Contact</h3>
+        <p>📍 {{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</p>
+        <p>📱 WhatsApp: {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Health Education | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Health Education</h1>
+      <p>
+        Preventive health insights focused on wellness habits, early intervention, and lifestyle management.
+        For personalized guidance, book a screening or consultation.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> Learn • Prevent • Thrive</div>
+  </div>
+
+  <div class="grid-3">
+    {% for post in posts %}
+      <div class="card">
+        <h3 style="max-width: 24ch;">{{ post.title }}</h3>
+        <p>{{ post.excerpt }}</p>
+        <div class="btn-row">
+          <a class="cta secondary" href="{% url 'blog_detail' post.slug %}">Read Article</a>
+          <a class="cta" href="{% url 'book_screening' %}">Book Screening</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="card">
+        <h3>No articles yet</h3>
+        <p>Add posts from the admin panel to start building trust and SEO.</p>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

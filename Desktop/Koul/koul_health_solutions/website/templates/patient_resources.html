@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Patient Resources | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Patient Resources</h1>
+      <p class="muted">
+        A single place for appointment booking, order support, education, and care-team communication.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> Fast support pathways</div>
+  </div>
+
+  <section class="section">
+    <div class="grid-2">
+      {% for r in resources %}
+        <div class="card">
+          <h3>{{ r.title }}</h3>
+          <p class="muted" style="margin-top: 8px;">{{ r.description }}</p>
+          <div class="btn-row">
+            <a class="cta" href="{% url r.url_name %}">{{ r.label }}</a>
+            <a class="cta secondary" href="{% url 'contact' %}">Need Help?</a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="card">
+          <h3>No resources published yet</h3>
+          <p class="muted">Add patient resources in admin to populate this page.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="grid-3">
+      <div class="card">
+        <h3>For New Patients</h3>
+        <p class="muted">Start with a screening appointment and share your main health goals.</p>
+      </div>
+      <div class="card">
+        <h3>For Returning Patients</h3>
+        <p class="muted">Use order support and follow-up channels for continuity of care.</p>
+      </div>
+      <div class="card">
+        <h3>Urgent Questions</h3>
+        <p class="muted">Reach the care desk through WhatsApp or direct call for quick guidance.</p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

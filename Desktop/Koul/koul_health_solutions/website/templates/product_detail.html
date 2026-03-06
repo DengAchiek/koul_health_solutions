@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>{{ product.name }}</h1>
+      <p>{{ product.short_description }}</p>
+    </div>
+    {% if product.price_kes %}
+      <div class="badge"><span class="dot"></span> KES {{ product.price_kes }}</div>
+    {% else %}
+      <div class="badge"><span class="dot"></span> Ask for pricing</div>
+    {% endif %}
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Overview</h3>
+      <p style="white-space:pre-line;">{{ product.description }}</p>
+
+      <div class="btn-row">
+        <a class="cta" href="{% url 'book_screening' %}?product={{ product.slug }}">Speak to a Consultant</a>
+        <a class="cta secondary" href="{% url 'products' %}">Back to Products</a>
+      </div>
+
+      <p class="help" style="margin-top:12px;">
+        Note: Supplements support wellness goals. For personalized guidance, book a consultation or screening.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>How to get started</h3>
+      <p>1) Book a screening or consultation.</p>
+      <p>2) Share your wellness goals and any concerns.</p>
+      <p>3) Get personalized supplement guidance.</p>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>Facility</h3>
+        <p>📍 {{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</p>
+        <p>📱 WhatsApp: {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

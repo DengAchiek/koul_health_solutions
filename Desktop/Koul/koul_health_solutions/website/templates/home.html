@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}{{ site_settings.site_name|default:"Kuol Health Solutions" }} | Modern Preventive Care{% endblock %}
+{% block meta_description %}{{ site_settings.meta_description|default:"Preventive screening, natural supplement support, and patient-centered wellness services in Nairobi and across Kenya." }}{% endblock %}
+
+{% block content %}
+  <section class="section" style="padding: 28px;">
+    <div class="grid-2" style="align-items: center; gap: 24px;">
+      <div>
+        <div class="pill"><span class="dot"></span> {{ site_settings.home_hero_badge|default:"Trusted Preventive Care in Kenya" }}</div>
+        <h1 style="margin-top: 14px;">
+          {{ site_settings.home_hero_title|default:"Better health starts with early screening and guided daily choices." }}
+        </h1>
+        <p class="muted" style="margin-top: 12px; max-width: 66ch;">
+          {{ site_settings.home_hero_description|default:"Kuol Health Solutions combines preventive screening, practical consultation, and natural supplement guidance to support individuals managing chronic and lifestyle conditions." }}
+        </p>
+
+        <div class="btn-row">
+          <a class="cta" href="{% url 'book_screening' %}">Book Appointment</a>
+          <a class="cta secondary" href="{% url 'services' %}">Explore Services</a>
+          <a class="cta secondary" href="{% url 'patient_resources' %}">Patient Resources</a>
+        </div>
+
+        <div class="grid-3" style="margin-top: 16px;">
+          {% for metric in home_metrics %}
+            <div class="card">
+              <h3>{{ metric.value }}</h3>
+              <p class="muted">{{ metric.title }}{% if metric.description %} - {{ metric.description }}{% endif %}</p>
+            </div>
+          {% empty %}
+            <div class="card">
+              <h3>3+ Years</h3>
+              <p class="muted">BFSUMA partner in Kenya for certified natural supplements.</p>
+            </div>
+            <div class="card">
+              <h3>Fast Follow-Up</h3>
+              <p class="muted">Call and WhatsApp support for appointments and order requests.</p>
+            </div>
+            <div class="card">
+              <h3>Patient Education</h3>
+              <p class="muted">Actionable health education to sustain long-term wellness.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card" style="background: linear-gradient(160deg, #0f476e, #0f766e); color: #ecfbff; border: 0; box-shadow: var(--shadow);">
+        <h3 style="font-size: 22px;">Care Access</h3>
+        <p style="margin-top: 8px; color: rgba(236, 251, 255, 0.9);">
+          Need screening, guidance, or order support? Our team can help quickly.
+        </p>
+
+        <div class="card" style="margin-top: 14px; background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.26); box-shadow: none;">
+          <h3 style="font-size: 16px; color: #ffffff;">Main Clinic</h3>
+          <p style="color: #e1f4ff;">{{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</p>
+          <p style="color: #e1f4ff;">{{ site_settings.utility_hours|default:"Mon-Sat: 8:00am - 6:00pm" }}</p>
+          <div class="btn-row">
+            <a class="cta secondary" href="{% url 'locations' %}">See Details</a>
+            <a class="cta secondary" href="https://maps.google.com/?q={{ site_settings.facility_address|default:'JKUAT Towers, Kenyatta Avenue, Nairobi'|urlencode }}" target="_blank" rel="noopener">Directions</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 12px; background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.26); box-shadow: none;">
+          <h3 style="font-size: 16px; color: #ffffff;">Quick Contact</h3>
+          <p style="color: #e1f4ff;">Call: {{ site_settings.contact_phone|default:"+254 795 225 892" }}</p>
+          <p style="color: #e1f4ff;">WhatsApp: {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
+          <div class="btn-row">
+            <a class="cta secondary" href="{{ site_settings.phone_link|default:'tel:+254795225892' }}">Call Now</a>
+            <a class="cta secondary" href="{{ site_settings.whatsapp_link|default:'https://wa.me/254784768933' }}" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="header">
+      <div>
+        <h2>Care and Wellness Services</h2>
+        <p class="muted">Structured support similar to modern clinic models, adapted for Kuol Health Solutions.</p>
+      </div>
+      <a class="cta secondary" href="{% url 'services' %}">View All Services</a>
+    </div>
+
+    <div class="grid-4">
+      {% for service in featured_services %}
+        <div class="card">
+          <h3>{{ service.title }}</h3>
+          <p class="muted">{{ service.description }}</p>
+        </div>
+      {% empty %}
+        <div class="card">
+          <h3>Preventive Screening</h3>
+          <p class="muted">Early risk detection and whole-body insight for better decisions.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="header">
+      <div>
+        <h2>Featured Supplements</h2>
+        <p class="muted">Browse selected products and request guidance before purchase.</p>
+      </div>
+      <a class="cta secondary" href="{% url 'products' %}">Browse All</a>
+    </div>
+
+    <div class="grid-3">
+      {% for p in featured_products %}
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; gap: 10px; align-items: flex-start;">
+            <h3>{{ p.name }}</h3>
+            {% if p.price_kes %}
+              <span class="price">KES {{ p.price_kes }}</span>
+            {% endif %}
+          </div>
+          <p class="muted" style="margin-top: 8px;">{{ p.short_description }}</p>
+          <div class="btn-row">
+            <a class="cta secondary" href="{% url 'product_detail' p.slug %}">Details</a>
+            <a class="cta" href="{% url 'order_request' %}?product={{ p.slug }}">Order</a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="card">
+          <h3>No supplements listed yet</h3>
+          <p class="muted">Add products in admin to populate this section.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="header">
+      <div>
+        <h2>Locations and Access</h2>
+        <p class="muted">In-person care in Nairobi plus virtual support across Kenya.</p>
+      </div>
+      <a class="cta secondary" href="{% url 'locations' %}">All Locations</a>
+    </div>
+
+    <div class="grid-2">
+      {% for item in locations %}
+        <div class="card">
+          <h3>{{ item.name }}</h3>
+          <p class="muted">{{ item.address }}</p>
+          <p class="muted">{{ item.hours }}</p>
+          <p class="muted">{{ item.phone }}</p>
+          <div class="btn-row">
+            <a class="cta secondary" href="{{ item.maps_url|default:item.whatsapp_link }}" target="_blank" rel="noopener">Open</a>
+            <a class="cta" href="{% url 'book_screening' %}">Book Here</a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="card">
+          <h3>No locations yet</h3>
+          <p class="muted">Add clinic locations in Django admin to populate this section.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="header">
+      <div>
+        <h2>Health Education and Trust</h2>
+        <p class="muted">Build confidence through practical wellness education and patient outcomes.</p>
+      </div>
+      <a class="cta secondary" href="{% url 'blog' %}">Read Articles</a>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Latest Health Education</h3>
+        {% for post in featured_posts %}
+          <div style="padding: 10px 0; border-bottom: 1px solid var(--line);">
+            <h3 style="font-size: 16px;">{{ post.title }}</h3>
+            <p class="muted" style="margin-top: 4px;">{{ post.excerpt }}</p>
+            <div class="btn-row" style="margin-top: 8px;">
+              <a class="cta secondary" href="{% url 'blog_detail' post.slug %}">Read</a>
+            </div>
+          </div>
+        {% empty %}
+          <p class="muted">No published articles yet.</p>
+        {% endfor %}
+      </div>
+
+      <div class="card">
+        <h3>Client Experience</h3>
+        <div class="grid-2" style="margin-top: 10px;">
+          <div class="card" style="box-shadow: none;">
+            <h3 style="font-size: 24px;">96%</h3>
+            <p class="muted">Client satisfaction target score</p>
+          </div>
+          <div class="card" style="box-shadow: none;">
+            <h3 style="font-size: 24px;">24h</h3>
+            <p class="muted">Typical follow-up response window</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 12px; display: grid; gap: 10px;">
+          {% for t in featured_testimonials %}
+            <div class="card" style="box-shadow: none;">
+              <h3 style="font-size: 16px;">{{ t.name }}</h3>
+              <p class="muted">"{{ t.quote }}"</p>
+              <p class="muted" style="margin-top: 6px;">Rating: {{ t.rating }}/5</p>
+            </div>
+          {% empty %}
+            <p class="muted">Add featured testimonials in admin to display patient stories.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: linear-gradient(140deg, #0f476e, #0f766e); color: #f4fcff; border: 0;">
+    <div class="grid-2" style="align-items: center;">
+      <div>
+        <h2 style="color: #ffffff;">Start your preventive care journey today.</h2>
+        <p style="margin-top: 8px; color: #d8f3fb;">
+          Book screening, request supplement guidance, or speak with our team for personalized recommendations.
+        </p>
+      </div>
+      <div class="btn-row" style="justify-content: flex-start;">
+        <a class="cta warning" href="{% url 'book_screening' %}">Book Appointment</a>
+        <a class="cta secondary" href="{% url 'order_request' %}">Order Support</a>
+        <a class="cta secondary" href="{% url 'contact' %}">Contact Team</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

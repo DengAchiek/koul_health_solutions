@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Services | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Services</h1>
+      <p class="muted">
+        Inspired by modern outpatient clinic structures, our services combine prevention, education, and practical follow-up.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> Patient-centered pathways</div>
+  </div>
+
+  <section class="section">
+    <div class="grid-2">
+      {% for item in service_groups %}
+        <div class="card">
+          <h3>{{ item.title }}</h3>
+          <p class="muted" style="margin-top: 8px;">{{ item.description }}</p>
+          <div class="btn-row">
+            <a class="cta" href="{% url item.cta_name %}">Get Started</a>
+            <a class="cta secondary" href="{% url 'contact' %}">Talk to Team</a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="card">
+          <h3>No services published yet</h3>
+          <p class="muted">Add services in admin to populate this section.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="grid-3">
+      <div class="card">
+        <h3>Step 1: Assessment</h3>
+        <p class="muted">We collect your concerns, priorities, and current wellness habits.</p>
+      </div>
+      <div class="card">
+        <h3>Step 2: Plan</h3>
+        <p class="muted">A practical prevention-focused guidance plan is shared with you.</p>
+      </div>
+      <div class="card">
+        <h3>Step 3: Follow-Up</h3>
+        <p class="muted">Our care desk supports you through execution and next steps.</p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

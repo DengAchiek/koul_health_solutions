@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Book Screening | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Book a Full Body Health Screening</h1>
+      <p>
+        Reserve a session at our {{ site_settings.utility_location_label|default:"Nairobi" }} facility and speak to a consultant for personalized guidance.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> {{ site_settings.facility_address|default:"JKUAT Towers, Nairobi" }}</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Appointment details</h3>
+
+      {% if success %}
+        <div class="success">
+          Booking submitted successfully. We will contact you shortly to confirm.
+        </div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="errors">
+          Please correct the errors below and try again.
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div>
+          <label for="{{ form.full_name.id_for_label }}">Full name</label>
+          {{ form.full_name }}
+          {% for e in form.full_name.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label for="{{ form.phone.id_for_label }}">Phone number</label>
+            {{ form.phone }}
+            {% for e in form.phone.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label for="{{ form.email.id_for_label }}">Email (optional)</label>
+            {{ form.email }}
+            {% for e in form.email.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label for="{{ form.preferred_date.id_for_label }}">Preferred date</label>
+            {{ form.preferred_date }}
+            {% for e in form.preferred_date.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label for="{{ form.preferred_time.id_for_label }}">Preferred time</label>
+            {{ form.preferred_time }}
+            {% for e in form.preferred_time.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <label for="{{ form.interest.id_for_label }}">What do you need help with?</label>
+          {{ form.interest }}
+          {% for e in form.interest.errors %}<div class="help" style="color:#ffd7de;">{{ e }}</div>{% endfor %}
+          <div class="help">Example: immunity support, lifestyle management, wellness plan, supplement guidance.</div>
+        </div>
+
+        <div>
+          <label for="{{ form.notes.id_for_label }}">Additional notes (optional)</label>
+          {{ form.notes }}
+        </div>
+
+        <button class="cta" type="submit">Submit Booking</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>What happens next?</h3>
+      <p>✅ We review your request.</p>
+      <p>✅ A consultant contacts you to confirm the appointment.</p>
+      <p>✅ You visit the facility for screening and guidance.</p>
+
+      {% if selected_product %}
+        <div class="card" style="margin-top:14px;">
+          <h3>Selected supplement</h3>
+          <p style="color:var(--muted);">
+            You’re requesting guidance related to: <b>{{ selected_product.name }}</b>
+          </p>
+        </div>
+      {% endif %}
+
+      <div class="card" style="margin-top:14px;">
+        <h3>Contact</h3>
+        <p>📍 {{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</p>
+        <p>📱 WhatsApp: {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
+        <p>📞 Call: {{ site_settings.contact_phone|default:"+254 795 225 892" }}</p>
+        <div class="btn-row">
+          <a class="cta secondary" href="{{ site_settings.whatsapp_link|default:'https://wa.me/254784768933' }}" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="cta secondary" href="{% url 'contact' %}">More Contact Options</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

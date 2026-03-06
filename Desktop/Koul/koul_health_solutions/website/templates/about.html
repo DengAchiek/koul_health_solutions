@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}About | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>{{ site_settings.about_heading|default:"About Kuol Health Solutions" }}</h1>
+      <p>
+        {{ site_settings.about_intro|default:"A preventive health and wellness organization supporting chronic and lifestyle condition management through natural, science-supported solutions." }}
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> Nairobi • Kenya</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Who we are</h3>
+      <p>
+        {{ site_settings.about_body|default:"Kuol Health Solutions is a health and wellness organization focused on preventive healthcare and managing chronic and lifestyle conditions." }}
+      </p>
+
+      <p style="margin-top:12px;">
+        We provide natural supplements designed to support the body, strengthen immunity, and promote long-term wellness.
+        Our approach emphasizes early intervention, proactive health management, and natural solutions.
+      </p>
+
+      <div class="btn-row">
+        <a class="cta" href="{% url 'products' %}">View Supplements</a>
+        <a class="cta secondary" href="{% url 'book_screening' %}">Book Screening</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Our facility</h3>
+      <p>
+        Our main facility is located at <b>{{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</b>, where we offer professional full body health screening and
+        consultations to guide individuals toward informed health decisions.
+      </p>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>What you can expect</h3>
+        {% for service in service_groups %}
+          <p>✔ {{ service.title }}</p>
+        {% empty %}
+          <p>✔ Professional screening</p>
+          <p>✔ Personalized consultation</p>
+          <p>✔ Evidence-informed wellness guidance</p>
+          <p>✔ Natural supplement support</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:16px;">
+    <div class="card">
+      <h3>Vision Statement</h3>
+      <p>
+        {{ site_settings.vision_statement|default:"To become a trusted leader in preventive health and wellness, empowering communities to live healthier, longer, and more productive lives through natural and science-supported solutions." }}
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Mission Statement</h3>
+      <p>
+        {{ site_settings.mission_statement|default:"To promote preventive healthcare and support the management of chronic and lifestyle conditions by providing certified natural supplements, professional health screening, and continuous health education." }}
+      </p>
+    </div>
+  </div>
+{% endblock %}

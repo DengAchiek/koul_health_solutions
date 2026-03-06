@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Locations | {{ site_settings.site_name|default:"Kuol Health Solutions" }}{% endblock %}
+
+{% block content %}
+  <div class="header">
+    <div>
+      <h1>Locations and Access</h1>
+      <p class="muted">
+        Visit our Nairobi clinic or reach us remotely for ongoing support, booking, and supplement guidance.
+      </p>
+    </div>
+    <div class="badge"><span class="dot"></span> In-person + virtual care</div>
+  </div>
+
+  <section class="section">
+    <div class="grid-2">
+      {% for item in locations %}
+        <div class="card">
+          <h3>{{ item.name }}</h3>
+          <p class="muted" style="margin-top: 8px;">{{ item.address }}</p>
+          <p class="muted">Hours: {{ item.hours }}</p>
+          <p class="muted">Phone: {{ item.phone }}</p>
+          <p class="muted">WhatsApp: {{ item.whatsapp }}</p>
+
+          <div style="margin-top: 10px; display: grid; gap: 6px;">
+            {% for service in item.services_list %}
+              <div class="pill">{{ service }}</div>
+            {% empty %}
+              <div class="pill">General care support</div>
+            {% endfor %}
+          </div>
+
+          <div class="btn-row">
+            <a class="cta secondary" href="{{ item.maps_url|default:item.whatsapp_link }}" target="_blank" rel="noopener">Open</a>
+            <a class="cta" href="{% url 'book_screening' %}">Book Appointment</a>
+          </div>
+        </div>
+      {% empty %}
+        <div class="card">
+          <h3>No locations published yet</h3>
+          <p class="muted">Add locations in admin to display care access points.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
