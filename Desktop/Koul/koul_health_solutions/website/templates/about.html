@@ -66,4 +66,23 @@
       </p>
     </div>
   </div>
+
+  <div class="section">
+    <div class="header">
+      <div>
+        <h2>Inside Our Story</h2>
+        <p class="muted">Photos and videos uploaded from the admin dashboard to bring the brand to life.</p>
+      </div>
+    </div>
+
+    <div>
+      {% include "includes/media_gallery.html" with media_items=about_media gallery_title=site_settings.site_name %}
+      {% if not about_media %}
+        <div class="card">
+          <h3>No about media yet</h3>
+          <p class="muted">Upload photos and videos under Site Settings in Django admin.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

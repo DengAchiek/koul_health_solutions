@@ -1,0 +1,50 @@
+{% with first_item=media_items|first %}
+  {% if first_item %}
+    <div class="media-gallery js-media-gallery">
+      <div class="media-stage{% if compact %} compact{% endif %}">
+        <img
+          class="js-media-gallery-image"
+          src="{% if first_item.is_image %}{{ first_item.file.url }}{% endif %}"
+          alt="{{ first_item.alt_text|default:gallery_title }}"
+          {% if not first_item.is_image %}hidden{% endif %}
+        />
+        <video
+          class="js-media-gallery-video"
+          controls
+          preload="metadata"
+          {% if first_item.is_image %}hidden{% endif %}
+        >
+          <source src="{% if first_item.is_video %}{{ first_item.file.url }}{% endif %}" />
+        </video>
+        <div class="media-stage-meta">
+          <span class="js-media-gallery-title">{{ first_item.title|default:gallery_title }}</span>
+          <span class="media-stage-type js-media-gallery-type">{{ first_item.media_type }}</span>
+        </div>
+      </div>
+
+      {% if media_items|length > 1 %}
+        <div class="media-thumbs">
+          {% for item in media_items %}
+            <button
+              class="media-thumb js-media-thumb{% if forloop.first %} is-active{% endif %}"
+              type="button"
+              data-type="{{ item.media_type }}"
+              data-src="{{ item.file.url }}"
+              data-alt="{{ item.alt_text|default:gallery_title }}"
+              data-title="{{ item.title|default:gallery_title }}"
+            >
+              {% if item.is_image %}
+                <img src="{{ item.file.url }}" alt="{{ item.alt_text|default:gallery_title }}" />
+              {% else %}
+                <video preload="metadata" muted>
+                  <source src="{{ item.file.url }}" />
+                </video>
+              {% endif %}
+              <span class="media-thumb-label">{{ item.title|default:item.media_type }}</span>
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endwith %}

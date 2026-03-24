@@ -15,6 +15,11 @@
   <div class="grid-3">
     {% for t in testimonials %}
       <div class="card">
+        {% if t.primary_media %}
+          <div style="margin-bottom:12px;">
+            {% include "includes/media_gallery.html" with media_items=t.media_items.all gallery_title=t.name compact=True %}
+          </div>
+        {% endif %}
         <h3>{{ t.name }}</h3>
         {% if t.role_or_title %}
           <p style="margin-top:6px; color:var(--muted); font-weight:800;">{{ t.role_or_title }}</p>

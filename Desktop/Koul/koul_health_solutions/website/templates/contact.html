@@ -13,10 +13,10 @@
   <div class="grid-2">
     <div class="card">
       <h3>Reach us</h3>
-      <p>📍 <b>Location:</b> {{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</p>
-      <p>📧 <b>Email:</b> {{ site_settings.contact_email|default:"KuolHealthsolutions@gmail.com" }}</p>
-      <p>📱 <b>WhatsApp:</b> {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
-      <p>📞 <b>Call:</b> {{ site_settings.contact_phone|default:"+254 795 225 892" }}</p>
+      <p><b>Location:</b> {{ site_settings.facility_address|default:"JKUAT Towers, Kenyatta Avenue, Nairobi" }}</p>
+      <p><b>Email:</b> {{ site_settings.contact_email|default:"KuolHealthsolutions@gmail.com" }}</p>
+      <p><b>WhatsApp:</b> {{ site_settings.contact_whatsapp|default:"+254 784 768 933" }}</p>
+      <p><b>Call:</b> {{ site_settings.contact_phone|default:"+254 795 225 892" }}</p>
 
       <div class="btn-row">
         <a class="cta" href="{{ site_settings.whatsapp_link|default:'https://wa.me/254784768933' }}" target="_blank" rel="noopener">Chat on WhatsApp</a>

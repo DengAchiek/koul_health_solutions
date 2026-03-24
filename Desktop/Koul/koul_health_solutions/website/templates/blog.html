@@ -16,6 +16,11 @@
   <div class="grid-3">
     {% for post in posts %}
       <div class="card">
+        {% if post.featured_image %}
+          <div class="content-image">
+            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" />
+          </div>
+        {% endif %}
         <h3 style="max-width: 24ch;">{{ post.title }}</h3>
         <p>{{ post.excerpt }}</p>
         <div class="btn-row">

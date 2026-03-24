@@ -3,9 +3,12 @@
 {% block meta_description %}{{ site_settings.meta_description|default:"Preventive screening, natural supplement support, and patient-centered wellness services in Nairobi and across Kenya." }}{% endblock %}
 
 {% block content %}
-  <section class="section" style="padding: 28px;">
+  <section
+    class="section hero-surface"
+    style="padding: 28px;{% if site_settings.hero_background_image %} --hero-image: url('{{ site_settings.hero_background_image.url }}');{% endif %}"
+  >
     <div class="grid-2" style="align-items: center; gap: 24px;">
-      <div>
+      <div class="hero-copy">
         <div class="pill"><span class="dot"></span> {{ site_settings.home_hero_badge|default:"Trusted Preventive Care in Kenya" }}</div>
         <h1 style="margin-top: 14px;">
           {{ site_settings.home_hero_title|default:"Better health starts with early screening and guided daily choices." }}
@@ -20,9 +23,14 @@
           <a class="cta secondary" href="{% url 'patient_resources' %}">Patient Resources</a>
         </div>
 
-        <div class="grid-3" style="margin-top: 16px;">
+        <div class="grid-3 hero-quick-stats" style="margin-top: 16px;">
           {% for metric in home_metrics %}
             <div class="card">
+              {% if metric.featured_image %}
+                <div class="content-image small">
+                  <img src="{{ metric.featured_image.url }}" alt="{{ metric.title }}" />
+                </div>
+              {% endif %}
               <h3>{{ metric.value }}</h3>
               <p class="muted">{{ metric.title }}{% if metric.description %} - {{ metric.description }}{% endif %}</p>
             </div>
@@ -44,7 +52,7 @@
       </div>
 
       <div class="card" style="background: linear-gradient(160deg, #0f476e, #0f766e); color: #ecfbff; border: 0; box-shadow: var(--shadow);">
-        <h3 style="font-size: 22px;">Care Access</h3>
+        <h3 style="font-size: 18px;">Care Access</h3>
         <p style="margin-top: 8px; color: rgba(236, 251, 255, 0.9);">
           Need screening, guidance, or order support? Our team can help quickly.
         </p>
@@ -84,6 +92,17 @@
     <div class="grid-4">
       {% for service in featured_services %}
         <div class="card">
+          {% if service.primary_media %}
+            <div class="media-frame compact" style="margin-bottom:12px;">
+              {% if service.primary_media.is_image %}
+                <img src="{{ service.primary_media.file.url }}" alt="{{ service.primary_media.alt_text|default:service.title }}" />
+              {% else %}
+                <video controls preload="metadata">
+                  <source src="{{ service.primary_media.file.url }}" />
+                </video>
+              {% endif %}
+            </div>
+          {% endif %}
           <h3>{{ service.title }}</h3>
           <p class="muted">{{ service.description }}</p>
         </div>
@@ -108,6 +127,17 @@
     <div class="grid-3">
       {% for p in featured_products %}
         <div class="card">
+          {% if p.primary_media %}
+            <div class="media-frame compact" style="margin-bottom:12px;">
+              {% if p.primary_media.is_image %}
+                <img src="{{ p.primary_media.file.url }}" alt="{{ p.primary_media.alt_text|default:p.name }}" />
+              {% else %}
+                <video controls preload="metadata">
+                  <source src="{{ p.primary_media.file.url }}" />
+                </video>
+              {% endif %}
+            </div>
+          {% endif %}
           <div style="display: flex; justify-content: space-between; gap: 10px; align-items: flex-start;">
             <h3>{{ p.name }}</h3>
             {% if p.price_kes %}
@@ -141,6 +171,11 @@
     <div class="grid-2">
       {% for item in locations %}
         <div class="card">
+          {% if item.featured_image %}
+            <div class="content-image">
+              <img src="{{ item.featured_image.url }}" alt="{{ item.name }}" />
+            </div>
+          {% endif %}
           <h3>{{ item.name }}</h3>
           <p class="muted">{{ item.address }}</p>
           <p class="muted">{{ item.hours }}</p>
@@ -173,6 +208,11 @@
         <h3>Latest Health Education</h3>
         {% for post in featured_posts %}
           <div style="padding: 10px 0; border-bottom: 1px solid var(--line);">
+            {% if post.featured_image %}
+              <div class="content-image">
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" />
+              </div>
+            {% endif %}
             <h3 style="font-size: 16px;">{{ post.title }}</h3>
             <p class="muted" style="margin-top: 4px;">{{ post.excerpt }}</p>
             <div class="btn-row" style="margin-top: 8px;">
@@ -188,11 +228,11 @@
         <h3>Client Experience</h3>
         <div class="grid-2" style="margin-top: 10px;">
           <div class="card" style="box-shadow: none;">
-            <h3 style="font-size: 24px;">96%</h3>
+            <h3 style="font-size: 20px;">96%</h3>
             <p class="muted">Client satisfaction target score</p>
           </div>
           <div class="card" style="box-shadow: none;">
-            <h3 style="font-size: 24px;">24h</h3>
+            <h3 style="font-size: 20px;">24h</h3>
             <p class="muted">Typical follow-up response window</p>
           </div>
         </div>
@@ -200,6 +240,17 @@
         <div style="margin-top: 12px; display: grid; gap: 10px;">
           {% for t in featured_testimonials %}
             <div class="card" style="box-shadow: none;">
+              {% if t.primary_media %}
+                <div class="media-frame compact" style="margin-bottom:12px;">
+                  {% if t.primary_media.is_image %}
+                    <img src="{{ t.primary_media.file.url }}" alt="{{ t.primary_media.alt_text|default:t.name }}" />
+                  {% else %}
+                    <video controls preload="metadata">
+                      <source src="{{ t.primary_media.file.url }}" />
+                    </video>
+                  {% endif %}
+                </div>
+              {% endif %}
               <h3 style="font-size: 16px;">{{ t.name }}</h3>
               <p class="muted">"{{ t.quote }}"</p>
               <p class="muted" style="margin-top: 6px;">Rating: {{ t.rating }}/5</p>

@@ -27,13 +27,13 @@ def _is_staff_user(user):
 
 
 def home(request):
-    featured_products = Product.objects.filter(is_active=True)[:3]
+    featured_products = Product.objects.filter(is_active=True).prefetch_related("media_items")[:3]
     featured_posts = BlogPost.objects.filter(is_published=True)[:3]
-    featured_testimonials = Testimonial.objects.filter(is_featured=True)[:3]
+    featured_testimonials = Testimonial.objects.filter(is_featured=True).prefetch_related("media_items")[:3]
 
-    featured_services = ServiceOffering.objects.filter(is_active=True, is_featured_home=True)[:4]
+    featured_services = ServiceOffering.objects.filter(is_active=True, is_featured_home=True).prefetch_related("media_items")[:4]
     if not featured_services:
-        featured_services = ServiceOffering.objects.filter(is_active=True)[:4]
+        featured_services = ServiceOffering.objects.filter(is_active=True).prefetch_related("media_items")[:4]
 
     home_metrics = HomeMetric.objects.filter(is_active=True)[:4]
 
@@ -61,10 +61,15 @@ def home(request):
 def about(request):
     service_groups = ServiceOffering.objects.filter(is_active=True)[:4]
     primary_location = ClinicLocation.objects.filter(is_active=True).first()
+    site_settings = SiteSettings.objects.first()
     return render(
         request,
         "about.html",
-        {"service_groups": service_groups, "primary_location": primary_location},
+        {
+            "service_groups": service_groups,
+            "primary_location": primary_location,
+            "about_media": site_settings.about_media.all() if site_settings else [],
+        },
     )
 
 
@@ -74,7 +79,7 @@ def contact(request):
 
 
 def services(request):
-    service_groups = ServiceOffering.objects.filter(is_active=True)
+    service_groups = ServiceOffering.objects.filter(is_active=True).prefetch_related("media_items")
     return render(request, "services.html", {"service_groups": service_groups})
 
 
@@ -128,7 +133,7 @@ def admin_account_settings(request):
 
 def products(request):
     q = (request.GET.get("q") or "").strip()
-    qs = Product.objects.filter(is_active=True)
+    qs = Product.objects.filter(is_active=True).prefetch_related("media_items")
 
     if q:
         qs = qs.filter(Q(name__icontains=q) | Q(short_description__icontains=q) | Q(description__icontains=q))
@@ -137,7 +142,7 @@ def products(request):
 
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, is_active=True)
+    product = get_object_or_404(Product.objects.prefetch_related("media_items"), slug=slug, is_active=True)
     return render(request, "product_detail.html", {"product": product})
 
 
@@ -179,7 +184,7 @@ def blog_detail(request, slug):
 
 
 def testimonials(request):
-    items = Testimonial.objects.filter(is_featured=True)
+    items = Testimonial.objects.filter(is_featured=True).prefetch_related("media_items")
     return render(request, "testimonials.html", {"testimonials": items})
 
 

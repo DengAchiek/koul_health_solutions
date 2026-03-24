@@ -30,10 +30,22 @@
     </div>
 
     <div class="card">
-      <h3>How to get started</h3>
-      <p>1) Book a screening or consultation.</p>
-      <p>2) Share your wellness goals and any concerns.</p>
-      <p>3) Get personalized supplement guidance.</p>
+      <h3>Product Media</h3>
+      <div style="margin-top:12px;">
+        {% include "includes/media_gallery.html" with media_items=product.media_items.all gallery_title=product.name %}
+        {% if not product.primary_media %}
+          <div class="card">
+            <p class="muted">No product images or videos uploaded yet.</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div style="margin-top:16px;">
+        <h3>How to get started</h3>
+        <p>1) Book a screening or consultation.</p>
+        <p>2) Share your wellness goals and any concerns.</p>
+        <p>3) Get personalized supplement guidance.</p>
+      </div>
 
       <div class="card" style="margin-top:14px;">
         <h3>Facility</h3>

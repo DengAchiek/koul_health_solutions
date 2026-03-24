@@ -1,6 +1,75 @@
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.utils.html import format_html
 from django.utils.text import slugify
+
+MEDIA_TYPE_CHOICES = [
+    ("image", "Image"),
+    ("video", "Video"),
+]
+
+MEDIA_FILE_VALIDATOR = FileExtensionValidator(
+    allowed_extensions=["jpg", "jpeg", "png", "webp", "gif", "mp4", "webm", "mov", "m4v", "ogg"]
+)
+IMAGE_FILE_VALIDATOR = FileExtensionValidator(
+    allowed_extensions=["jpg", "jpeg", "png", "webp", "gif"]
+)
+
+
+def media_upload_to(instance, filename):
+    return f"{instance.media_directory}/{filename}"
+
+
+class MediaAssetBase(models.Model):
+    title = models.CharField(max_length=120, blank=True)
+    alt_text = models.CharField(max_length=180, blank=True)
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES, default="image")
+    file = models.FileField(upload_to=media_upload_to, validators=[MEDIA_FILE_VALIDATOR])
+    is_primary = models.BooleanField(
+        default=False,
+        help_text="Use this as the main image/video for cards and previews.",
+    )
+    display_order = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+        ordering = ["display_order", "created_at"]
+
+    @property
+    def is_image(self):
+        return self.media_type == "image"
+
+    @property
+    def is_video(self):
+        return self.media_type == "video"
+
+    def preview_tag(self):
+        if not self.file:
+            return "No media uploaded"
+        if self.is_image:
+            return format_html(
+                '<img src="{}" alt="{}" style="width:120px;height:90px;object-fit:cover;border-radius:10px;" />',
+                self.file.url,
+                self.alt_text or self.title or "Preview",
+            )
+        return format_html(
+            '<video src="{}" style="width:160px;height:90px;border-radius:10px;" controls preload="metadata"></video>',
+            self.file.url,
+        )
+
+    preview_tag.short_description = "Preview"
+
+
+def single_image_preview(file_field, alt_text="Preview"):
+    if not file_field:
+        return "No image uploaded"
+    return format_html(
+        '<img src="{}" alt="{}" style="width:120px;height:90px;object-fit:cover;border-radius:10px;" />',
+        file_field.url,
+        alt_text,
+    )
 
 
 class Product(models.Model):
@@ -25,6 +94,16 @@ class Product(models.Model):
                 i += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+    @property
+    def primary_media(self):
+        prefetched = getattr(self, "_prefetched_objects_cache", {}).get("media_items")
+        if prefetched is not None:
+            for item in prefetched:
+                if item.is_primary:
+                    return item
+            return prefetched[0] if prefetched else None
+        return self.media_items.filter(is_primary=True).first() or self.media_items.first()
 
     def __str__(self):
         return self.name
@@ -55,6 +134,11 @@ class ScreeningBooking(models.Model):
 class BlogPost(models.Model):
     title = models.CharField(max_length=160)
     slug = models.SlugField(max_length=190, unique=True, blank=True)
+    featured_image = models.FileField(
+        upload_to="blog",
+        blank=True,
+        validators=[IMAGE_FILE_VALIDATOR],
+    )
     excerpt = models.CharField(max_length=260)
     content = models.TextField()
     is_published = models.BooleanField(default=True)
@@ -75,6 +159,11 @@ class BlogPost(models.Model):
             self.slug = slug
         super().save(*args, **kwargs)
 
+    def preview_tag(self):
+        return single_image_preview(self.featured_image, self.title)
+
+    preview_tag.short_description = "Preview"
+
     def __str__(self):
         return self.title
 
@@ -89,6 +178,16 @@ class Testimonial(models.Model):
 
     class Meta:
         ordering = ["-is_featured", "-created_at"]
+
+    @property
+    def primary_media(self):
+        prefetched = getattr(self, "_prefetched_objects_cache", {}).get("media_items")
+        if prefetched is not None:
+            for item in prefetched:
+                if item.is_primary:
+                    return item
+            return prefetched[0] if prefetched else None
+        return self.media_items.filter(is_primary=True).first() or self.media_items.first()
 
     def __str__(self):
         return f"{self.name} ({self.rating}/5)"
@@ -132,6 +231,12 @@ class SiteSettings(models.Model):
     meta_description = models.CharField(
         max_length=255,
         default="Preventive care, wellness screening, and natural supplement guidance in Nairobi.",
+    )
+    hero_background_image = models.FileField(
+        upload_to="site",
+        blank=True,
+        validators=[IMAGE_FILE_VALIDATOR],
+        help_text="Optional hero background image shown on the home page.",
     )
     utility_location_label = models.CharField(max_length=120, default="Nairobi Main Clinic")
     utility_hours = models.CharField(max_length=120, default="Mon-Sat 8:00am - 6:00pm")
@@ -237,12 +342,27 @@ class ServiceOffering(models.Model):
     class Meta:
         ordering = ["display_order", "title"]
 
+    @property
+    def primary_media(self):
+        prefetched = getattr(self, "_prefetched_objects_cache", {}).get("media_items")
+        if prefetched is not None:
+            for item in prefetched:
+                if item.is_primary:
+                    return item
+            return prefetched[0] if prefetched else None
+        return self.media_items.filter(is_primary=True).first() or self.media_items.first()
+
     def __str__(self):
         return self.title
 
 
 class ClinicLocation(models.Model):
     name = models.CharField(max_length=140)
+    featured_image = models.FileField(
+        upload_to="locations",
+        blank=True,
+        validators=[IMAGE_FILE_VALIDATOR],
+    )
     address = models.CharField(max_length=220)
     phone = models.CharField(max_length=30)
     whatsapp = models.CharField(max_length=30, blank=True)
@@ -273,6 +393,11 @@ class ClinicLocation(models.Model):
     def whatsapp_link(self):
         digits = "".join(ch for ch in (self.whatsapp or "") if ch.isdigit())
         return f"https://wa.me/{digits}" if digits else "#"
+
+    def preview_tag(self):
+        return single_image_preview(self.featured_image, self.name)
+
+    preview_tag.short_description = "Preview"
 
     def __str__(self):
         return self.name
@@ -307,6 +432,11 @@ class PatientResource(models.Model):
 class HomeMetric(models.Model):
     value = models.CharField(max_length=40)
     title = models.CharField(max_length=100)
+    featured_image = models.FileField(
+        upload_to="metrics",
+        blank=True,
+        validators=[IMAGE_FILE_VALIDATOR],
+    )
     description = models.CharField(max_length=220, blank=True)
     is_active = models.BooleanField(default=True)
     display_order = models.PositiveIntegerField(default=1)
@@ -315,5 +445,56 @@ class HomeMetric(models.Model):
     class Meta:
         ordering = ["display_order", "title"]
 
+    def preview_tag(self):
+        return single_image_preview(self.featured_image, self.title)
+
+    preview_tag.short_description = "Preview"
+
     def __str__(self):
         return f"{self.value} - {self.title}"
+
+
+class ProductMedia(MediaAssetBase):
+    media_directory = "products"
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="media_items")
+
+    class Meta(MediaAssetBase.Meta):
+        ordering = ["display_order", "created_at"]
+
+    def __str__(self):
+        return f"{self.product.name} media"
+
+
+class TestimonialMedia(MediaAssetBase):
+    media_directory = "testimonials"
+    testimonial = models.ForeignKey(Testimonial, on_delete=models.CASCADE, related_name="media_items")
+
+    class Meta(MediaAssetBase.Meta):
+        ordering = ["display_order", "created_at"]
+
+    def __str__(self):
+        return f"{self.testimonial.name} media"
+
+
+class ServiceMedia(MediaAssetBase):
+    media_directory = "services"
+    service = models.ForeignKey(ServiceOffering, on_delete=models.CASCADE, related_name="media_items")
+
+    class Meta(MediaAssetBase.Meta):
+        ordering = ["display_order", "created_at"]
+
+    def __str__(self):
+        return f"{self.service.title} media"
+
+
+class AboutMedia(MediaAssetBase):
+    media_directory = "about"
+    site_settings = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name="about_media")
+
+    class Meta(MediaAssetBase.Meta):
+        ordering = ["display_order", "created_at"]
+        verbose_name = "About media"
+        verbose_name_plural = "About media"
+
+    def __str__(self):
+        return f"{self.site_settings.site_name} about media"

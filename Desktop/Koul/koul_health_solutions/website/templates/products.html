@@ -27,6 +27,18 @@
   <div class="grid-3">
     {% for p in products %}
       <div class="card">
+        {% if p.primary_media %}
+          <div class="media-frame compact" style="margin-bottom:12px;">
+            {% if p.primary_media.is_image %}
+              <img src="{{ p.primary_media.file.url }}" alt="{{ p.primary_media.alt_text|default:p.name }}" />
+            {% else %}
+              <video controls preload="metadata">
+                <source src="{{ p.primary_media.file.url }}" />
+              </video>
+            {% endif %}
+          </div>
+        {% endif %}
+
         <div class="product-top">
           <h3 style="max-width: 18ch;">{{ p.name }}</h3>
           {% if p.price_kes %}

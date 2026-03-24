@@ -16,6 +16,11 @@
     <div class="grid-2">
       {% for item in locations %}
         <div class="card">
+          {% if item.featured_image %}
+            <div class="content-image">
+              <img src="{{ item.featured_image.url }}" alt="{{ item.name }}" />
+            </div>
+          {% endif %}
           <h3>{{ item.name }}</h3>
           <p class="muted" style="margin-top: 8px;">{{ item.address }}</p>
           <p class="muted">Hours: {{ item.hours }}</p>
