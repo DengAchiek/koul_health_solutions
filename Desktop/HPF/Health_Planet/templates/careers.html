@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Careers | Health Planet Foundation{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container page-hero-inner">
+        <p class="hero-kicker">Careers</p>
+        <h1>Work with a team focused on practical community health impact.</h1>
+        <p>We look for people who listen carefully, move with integrity, and care about the details that make programs last.</p>
+    </div>
+</section>
+
+<section class="section section-soft">
+    <div class="container">
+        <div class="section-title">
+            <h2>Open roles</h2>
+            <p>Join field-aware work across programs, learning, communications, and partner support.</p>
+        </div>
+
+        <div class="opportunity-list">
+            {% for opening in openings %}
+            <article class="opportunity-card">
+                <span>{{ opening.type }}</span>
+                <div>
+                    <h3>{{ opening.role }}</h3>
+                    <p>{{ opening.location }}</p>
+                </div>
+                <a class="button button-dark" href="mailto:careers@climatehealthzambia.org">Apply by email</a>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

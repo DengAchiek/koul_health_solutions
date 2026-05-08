@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Contact | Health Planet Foundation{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container page-hero-inner">
+        <p class="hero-kicker">Contact</p>
+        <h1>Start a partnership conversation or reach the program team.</h1>
+        <p>Tell us what you are working on and where collaboration could help.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container form-layout">
+        <div class="contact-details rich-panel">
+            <p class="eyebrow">Reach us</p>
+            <h2>Program office</h2>
+            <p>Lusaka, Zambia</p>
+            <p><a class="text-link" href="mailto:hello@climatehealthzambia.org">hello@climatehealthzambia.org</a></p>
+            <div class="contact-note">
+                <strong>Partnership focus</strong>
+                <span>Community health, climate resilience, safe motherhood, mental wellness, and youth-centered public health programs.</span>
+            </div>
+        </div>
+
+        <form class="panel-form" method="post">
+            {% csrf_token %}
+            {% if submitted %}
+            <div class="notice">Thank you. Your message has been received.</div>
+            {% endif %}
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <button class="button button-primary" type="submit">Send message</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

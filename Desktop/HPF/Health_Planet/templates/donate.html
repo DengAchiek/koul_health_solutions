@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Donate | Health Planet Foundation{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container page-hero-inner">
+        <p class="hero-kicker">Donate</p>
+        <h1>Your support helps communities prepare earlier and care better.</h1>
+        <p>Contributions support training, community sessions, field materials, and referral coordination.</p>
+    </div>
+</section>
+
+<section class="section section-soft">
+    <div class="container form-layout">
+        <div class="section-copy">
+            <p class="eyebrow">Support the mission</p>
+            <h2>Choose an amount</h2>
+            <p>This demo form records your interest locally and can be connected to a payment provider when the organization is ready.</p>
+            <div class="mini-stats">
+                <div><strong>25</strong><span>Field materials</span></div>
+                <div><strong>50</strong><span>Community session support</span></div>
+                <div><strong>100</strong><span>Training contribution</span></div>
+            </div>
+        </div>
+
+        <form class="panel-form" method="post">
+            {% csrf_token %}
+            {% if submitted %}
+            <div class="notice">Thank you. Your support interest has been received.</div>
+            {% endif %}
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+
+            <label for="amount">Donation amount</label>
+            <select id="amount" name="amount" required>
+                <option value="">Select an amount</option>
+                <option value="25">USD 25</option>
+                <option value="50">USD 50</option>
+                <option value="100">USD 100</option>
+                <option value="custom">Custom amount</option>
+            </select>
+
+            <button class="button button-primary" type="submit">Register support</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
